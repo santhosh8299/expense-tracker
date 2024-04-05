@@ -1,0 +1,2 @@
+install firebase-tools package to use the firebase cli
+install rxfire which will expose firebase features as observables

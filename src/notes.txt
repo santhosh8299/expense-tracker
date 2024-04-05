@@ -1,0 +1,38 @@
+node can be installed directly with nvm
+npm comes built in with node
+web application => similar to mobile application, on entering an url in browser, 
+the application code is downloaded and the app functions seamlessly
+
+website eg: spacejam.com/1996/jam.html => static html site
+wordpress.com => php site => server side generated html
+
+package.json contains dependencies, name of the project and the version and we can also have custom scripts
+package.lock.json file contains the dependencies and their sub-dependencies
+angular.json file has architect section where we have many commands
+1) build => config section => budget ,default config
+2) serve =>
+3) test
+tsconfig.json => main ts config file for the application
+tsconfig.app.json => its an extension of tsconfig.json
+tsconfig.spec.json => its an extension of tsconfig.json which is for all spec file config
+editor.config.json => prettier extension uses this for formatting.
+
+src folder will have the code for our applicaiton
+styles.css => contains the global style instead of polluting create a style folder and create
+separate separate global style files and import it here
+
+main.ts => will be the initial file for bootstrapping the application
+index.html => will be the main html file
+app-root is the selector for app component
+assets => all media except favicon should go inside assets folder.
+app => this folder will contain all the main code
+when we generate anything with angular cli it will take app as the root folder.
+each and every component will have 4 files ts,html,scss and spec file.
+out of which html and scss are linked in ts file but spec file is automatically detected by the test runner.
+import '~bootstrap/dist/css/bootstrap.min.css' => ~ symbol indicates node modules folder
+
+s => single responsibility principle => a class should contain single responsibility
+o => open close principle => open to extension and close to modification of existing code
+l => liskov substitution principle => subclass should replace base class still it should function properly.
+i => interface segregation principle => only the used properties alone should be in the interface.
+d => dependency inversion => class should depend on the abstract class and not on its implementation

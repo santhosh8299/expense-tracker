@@ -1,0 +1,65 @@
+observable is a function declaration with observer as the parameter
+observable can be called with subscribe => observable function call and observer is the argument passed to it
+observer is an object with three keys next, complete, error each has a function as its value
+interface Observer {
+  next: (value: any) => void;
+  error: (err: any) => void;
+  complete: () => void;
+}
+
+class Observable {
+  constructor(private _subscribe: (observer: Observer) => void) {}
+
+  subscribe(observer: Observer) {
+    this._subscribe(observer);
+  }
+}
+observable is cold or unicast
+cold => they connect one producer of values to one consumer/ observer of those value
+while creating the observable it is taking a function as a parameter(producer function)
+unicast => it has only one source
+
+subject is hot and multicast
+multicast => 
+hot => they connect one produce to multiple consumers/observers
+while creating the subject it is not taking any producer function as a parameter
+export class Subject {
+  private observers: Observer[] = [];
+
+  subscribe(observer: Observer) {
+    this.observers.push(observer);
+  }
+
+  next(data: any) {
+    for (const observer of this.observers) {
+      observer.next(data);
+    }
+  }
+
+  error(err: any) {
+    for (const observer of this.observers) {
+      observer.error(err);
+    }
+  }
+  
+
+  complete() {
+    for (const observer of this.observers) {
+      observer.complete();
+    }
+  }
+}
+OPERATORS
+creation operators => from of
+pipeable operators => 
+myObservable$.pipe(
+    map((value) => value * 2),
+    filter((value) => value < 7)
+).subscribe((val) => console.log(val));
+subscribe => will subscribe to filter stream.
+filter will take the map stream as input and subscribe to it
+map will subscribe to the original observable
+it is a long chain of subscription chain
+pipe operators will take input streams and return a new stream
+tap operator doesn't do anything
+startwith will subscribe to itself first and emit its value and then it will subscribe to the source and emit all its value
