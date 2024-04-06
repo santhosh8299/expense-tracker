@@ -31,11 +31,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              {
-                "input": "src/theme-saga-blue.scss",
-                "inject": false,
-                "bundleName": "saga-blue"
-              },
+              "src/theme-saga-blue.scss",
               {
                 "input": "src/theme-bootstrap4-light-purple.scss",
                 "inject": false,

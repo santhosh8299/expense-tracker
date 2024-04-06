@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './dashboard.component.scss'
 })
 export default class DashboardComponent {
-
 }

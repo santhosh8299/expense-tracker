@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "firebase emulators:exec --project=demo-project --ui \"ng serve\"",
+    "start": "firebase emulators:exec --project=demo-project --ui \"ng serve --configuration production\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
     "firebase": "^10.10.0",
+    "primeicons": "^7.0.0",
     "primeng": "^17.12.0",
     "rxfire": "^6.0.5",
     "rxjs": "~7.8.0",
