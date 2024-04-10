@@ -1,0 +1,15 @@
+Jasmine => it is a js unit testing tool, it is run by nodejs, so it lacks testing DOM things
+So it uses Karma, to do DOM testing.
+it runs in browser
+Angular cli will build this automatically
+Karma is deprecated. It will be replaced by mordern web test runner.
+
+Jest was created by facebook or meta to overcome this. 
+Angular cli will provide build for jest
+it runs in terminal itself
+1)it uses JSDOM a lightweight emulator to create DOM things.
+2)It runs tests in parallel
+3)only the affected testcases are ran
+we need jest-preset-angular to carry out the testcases
+
+

@@ -1,40 +1,20 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { expenseCategoryI, expenseI, newExpense } from '../interfaces/expense'
 import { FIRESTORE } from '../../app.config';
-import { addDoc, collection, deleteDoc, doc, limit, query, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, limit, orderBy, query, setDoc } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { Observable, defer } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
-  #expenses = signal<expenseI[]>([]);
-  expenseList = this.#expenses.asReadonly();
-
-  firestore = inject(FIRESTORE);
-  expenseCollection = collection(this.firestore, 'expenseList');
+  private firestore = inject(FIRESTORE);
+  private expenseCollection = collection(this.firestore, 'expenseList');
   
+
   constructor() { }
-  setExpenseList(exList: expenseI[]){
-    this.#expenses.set(exList)
-  }
-  addExpenseList(newEx: newExpense){
-    const newExx = {...newEx, id: ''}
-    this.#expenses.update(ex => [...ex, newExx])
-  }
-  updateExpenseList(id: string, updatedExpense: expenseI){
-    this.#expenses.update(ex => {
-      return ex.map(x => {
-        if(x.id === id){
-          return updatedExpense
-        }
-        else{
-          return x
-        }
-      })
-    })
-  }
   getExpenseCategories(){
     const expenseCollection = query(collection(this.firestore, 'expenseCategory'),limit(50))//to get a reference to a collection
     /* const messagesCollection = query(

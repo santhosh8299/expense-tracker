@@ -36,3 +36,12 @@ o => open close principle => open to extension and close to modification of exis
 l => liskov substitution principle => subclass should replace base class still it should function properly.
 i => interface segregation principle => only the used properties alone should be in the interface.
 d => dependency inversion => class should depend on the abstract class and not on its implementation
+
+commonjs module => use require('') to load => synchronous => nodejs uses it
+esm module => use import * from to load => asynchronous
+
+transpiling => one high level programming language to another high level programming language
+compiling => programming language to machine language
+
+Angular uses incremental DOM. At the time of compilation, angular converts componenet code into set of 
+instructions. when these instructions are not referenced it is omitted in the final bundle(treeshakable).

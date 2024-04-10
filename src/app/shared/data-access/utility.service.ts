@@ -5,15 +5,15 @@ import { monthNames } from '../utils/constant';
   providedIn: 'root'
 })
 export class UtilityService {
-
+  date = new Date();
   constructor() { 
 
   }
   getCurrentMonth(){
-    return monthNames[(new Date()).getMonth()];
+    return monthNames[this.date.getMonth()];
   }
   getMondays() {
-    let d = new Date(),
+    let d = this.date,
         month = d.getMonth(),
         mondays = [];
 
@@ -26,7 +26,7 @@ export class UtilityService {
 
     // Get all the other Mondays in the month
     while (d.getMonth() === month) {
-        mondays.push(new Date(d.getTime()));
+        mondays.push((new Date(d.getTime())).getDate());
         d.setDate(d.getDate() + 7);
     }
 
