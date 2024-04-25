@@ -5,45 +5,48 @@ import { CommonModule } from '@angular/common';
 import { TableModule, Table } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { expenseCategoryI, expenseI } from '../../shared/interfaces/expense';
+import { expenseCategoryI, expenseI, expenseItemsI } from '../../shared/interfaces/expense';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api'
 import { MessagesModule } from 'primeng/messages';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 interface expenseState{
     expenseList: expenseI[],
-    editingRowKey: string | null
   }
 @Component({
     selector: 'app-expenses',
     standalone: true,
     templateUrl: './expenses.component.html',
     styleUrl: './expenses.component.scss',
-    imports: [CommonModule, TableModule, FormsModule, DropdownModule, ButtonModule, InputTextModule, MessagesModule],
-    providers: [MessageService]
+    imports: [CommonModule, TableModule, FormsModule, DropdownModule, ButtonModule, InputTextModule, MessagesModule, AutoCompleteModule],
+    providers: [MessageService],
 })
 export default class ExpensesComponent {
     expenseTable = viewChild<Table>('dt');
     expenseService = inject(ExpenseService);
     utilityService = inject(UtilityService);
     messageService = inject(MessageService)
-
     //state
-    private state = signal<expenseState>({
+    state = signal<expenseState>({
         expenseList: [],
-        editingRowKey: null
     })
+    clonedEditedExpense?: expenseI;
+    suggestedExpenses: expenseItemsI[] = [];
     //selectors
     expenseList = computed(() => this.state().expenseList);
 
-    expenseCategories = signal([]);
+
+    expenseCategories = signal<expenseCategoryI[]>([]);
     getExpenseCategories$ = this.expenseService.getExpenseCategories();
     getExpenseList$ = this.expenseService.getExpenseList();
 
     constructor(){
         this.getExpenseList();
+        this.getExpenseCategories$.subscribe(data => {
+            this.expenseCategories.set(data)
+        })
     }
     getExpenseList(){
         this.getExpenseList$.subscribe(list => {
@@ -53,13 +56,13 @@ export default class ExpensesComponent {
         })
     }
     onRowEditInit(expense: expenseI) {
-        this.state.update(state => {
-            return {...state, editingRowKey: expense.id}
-        })
+        this.clonedEditedExpense = {...expense};
     }
 
-    onRowEditSave(expense: expenseI) {
-        if(expense.id === ''){
+    onRowEditSave(event: any,expense: expenseI) {
+        console.log(event);
+        event.stopImmediatePropagation();
+        /* if(expense.id === ''){
             const { id, ...newEx } = expense;
             this.expenseService.addExpense(newEx).subscribe(data => {
                 this.messageService.add({severity:'success', summary:'Expense added successfully'});
@@ -69,19 +72,19 @@ export default class ExpensesComponent {
                 this.messageService.add({severity:'success', summary:'Expense updated successfully', detail:'Via MessageService'});
             })
         }
-        
+        delete this.clonedEditedExpense; */
     }
 
     onRowEditCancel(expense: expenseI, index: number) {
-        if(!expense.id){
-            this.state.update(state => ({...state, expenseList: state.expenseList.filter(exp => exp.id !== expense.id)}) )
-        }else{
-            this.getExpenseList();
-        }
+        this.state.update(state => {
+            state.expenseList[index] = this.clonedEditedExpense!;
+            return state
+        })
+        delete this.clonedEditedExpense;
     }
     addExpense(){
         if(this.expenseTable()){
-            if(!Object.values((this.expenseTable() as Table).editingRowKeys).find(bool => bool)){
+            if(!this.clonedEditedExpense){
                 const rowData = {
                     id: '',
                     name: '',
@@ -91,7 +94,7 @@ export default class ExpensesComponent {
                     price: 0,
                 }
                 this.state.update(state => {
-                    return {...state,editingRowKey: rowData.id,expenseList: [...state.expenseList,rowData]}
+                    return {...state,expenseList: [...state.expenseList,rowData]}
                 })
                 this.expenseTable()?.initRowEdit(rowData);
             }
@@ -101,5 +104,21 @@ export default class ExpensesComponent {
         this.expenseService.deleteExpense(expense).subscribe(data => {
             this.messageService.add({severity:'success', summary:'Expense deleted successfully'});
         })
+        delete this.clonedEditedExpense;
+    }
+    searchLibrary(event: AutoCompleteCompleteEvent){
+        const searchTerm = event.query.toLowerCase();
+        this.suggestedExpenses = this.expenseService.expenseAppState().expenseItems.filter(item => item.name.toLowerCase().includes(searchTerm));
+    }
+    selectLibExpense(event: AutoCompleteSelectEvent, index: number){
+        console.log(event)
+        this.state.update(state => {
+            state.expenseList[index] = event.value;
+            return state
+        })
+        this.expenseTable()?.initRowEdit(this.state().expenseList[index]);
+    }
+    getCategoryName(expense: expenseItemsI){
+        return this.expenseCategories().find(cat => cat.id === expense.categoryId)?.name
     }
 }

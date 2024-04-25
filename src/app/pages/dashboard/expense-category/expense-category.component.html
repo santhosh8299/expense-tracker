@@ -1,0 +1,79 @@
+<p-accordion>
+    @for(category of categories(); track category.id){
+        <p-accordionTab [header]="category.name">
+            @if(category.items){
+                <!-- <p-table [value]="category.items" dataKey="id" #dt editMode="row">
+                    <ng-template pTemplate="caption">
+                        <button dataid="add-expense-button" (click)="addExpenseItem()">Add Expense Item</button>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Name</th>
+                            <th>Store Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-expense let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="expense">
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="expense.name" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{expense.name}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="expense.store">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{expense.store}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="number" [(ngModel)]="expense.quantity" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{expense.quantity}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="number" [(ngModel)]="expense.price" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{expense.price | currency: 'GBP'}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(expense)" class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(expense)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(expense, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-trash" (click)="onRowDelete(expense)" class="p-button-rounded p-button-text p-button-danger"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7">No expenses found during this time period.</td>
+                        </tr>
+                    </ng-template>
+                </p-table> -->
+            }
+        </p-accordionTab>
+    }
+</p-accordion>

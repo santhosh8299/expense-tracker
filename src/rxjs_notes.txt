@@ -1,3 +1,7 @@
+Reactive extension of js
+ReactiveX apis implemented in js
+Observer pattern
+
 observable is a function declaration with observer as the parameter
 observable can be called with subscribe => observable function call and observer is the argument passed to it
 observer is an object with three keys next, complete, error each has a function as its value
@@ -63,3 +67,6 @@ it is a long chain of subscription chain
 pipe operators will take input streams and return a new stream
 tap operator doesn't do anything
 startwith will subscribe to itself first and emit its value and then it will subscribe to the source and emit all its value
+Since Angular v16, you can unsubscribe more easily by using the
+takeUntilDestroyed operator provided by the framework in the
+@angular/core/rxjs-interop package.

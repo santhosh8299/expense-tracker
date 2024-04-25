@@ -1,0 +1,36 @@
+two syntax => scss => saccy css => superset of css => scss file extension
+sass => uses indentation
+css variables
+:root{
+    --text-clr: black;
+}
+sass variable => $text-clr: black
+sass variable on compilation will replace the value with the variable. so it is 100% browser compatible.
+sass maps => $font: (
+    small: 8px;
+    regular: 10px;
+    large: 14px;
+)
+to use map => map-get($font, small)
+
+partial => scss file begins with underscore and compiler wont convert it into css
+@import 'reset' => imports partial _reset.scss file
+
+functions => similar to js functions
+@function weight($sizename){
+    @return map-get($font, $sizename)
+}
+
+mixins => repeated properties can be combined and used as mixins
+@mixin flexCenter(){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+p{
+    @include flexCenter
+}
+@extend .classname => will include all the style in that class
+p{
+    @extend .classname => it will include all the style in the classname
+}

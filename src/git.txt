@@ -1,0 +1,40 @@
+local repo => 
+remote repo =>
+modified files
+untracked files
+staging area
+git add . => adds all file to staging area
+git add -p index.html => will add only parts of index.html
+commit -m '' -m '' => commit only commits changes to the local repo
+git commit -am '' => adds and commits in single line => it commits only modified files and not untracked changes
+git push origin master=>origin will be set while cloning the remote repo into local repo
+git remote -v => lists all remote repos
+if the project is not cloned then we can set remote origin by 
+git remote add origin https://github.com/santhosh8299/expense-tracker.git
+git push -u origin master => set upstream => once it is set, for future push we can use git push alone
+git branch => lists all branches
+git checkout -b feature/bug090 => creates new branch and switched to new once.
+git diff
+git merge 
+not needed.. since we will push to remote and merge in the main and then we take pull and update other branches
+git log => lists all commits
+fork => create a new repo from another existing repo with all the branch details.
+merge => fast forward merge where the merging branches will have the same branch history
+merge commit where the two branches changes are merged in a commit. it happens automatically on merge.
+
+undo changes
+git reset => undo all staged files to working directory
+git reset HEAD~1 => HEAD here points to current commit. HEAD~1 points to one commit before. 
+it will undo last commit and changes in the last commit will move to working directory => it will unstaged and uncommitted
+git reset commithash => will undo the stage and commit but the changes will be in working directory.
+git reset --hard commit => will completely remove the changes even from the working directory.
+git merge --abort => undo recent merge
+
+
+travel 
+leisure
+grocerries
+snack
+friends
+Housebills
+mobilebills

@@ -15,5 +15,10 @@
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts"
-  ]
+  ],
+  "typeAcquisition": {
+    "include": [
+      "jest"
+    ]
+  }
 }

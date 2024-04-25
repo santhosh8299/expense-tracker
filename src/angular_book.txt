@@ -1,0 +1,372 @@
+Ecma script is specification => js is browser implementation of ecmascript
+in 2015 es2015 or es6 is introduced. after that early release happened 
+use transpilers(babel) which supports old browser version by transpiling es6 to es5 code.
+Js => prototype based object oriented programming model.
+c++/java => classical object oriented programming model.
+
+Typescript has modifiers
+public, private, protected
+const map = new Map([[1,2],[3,4]])
+map retains the order in which it is inserted but not objects
+array => for of
+objects => for in
+promise vs callbacks => handle error in one place. neat and understandable code
+
+es5 itself doesn't have any module loading system so a community developed commonjs 
+es6 introduced import syntax but js engine haven't implemented it yet.
+/// <reference path="angular.d.ts" /> is a special comment
+recognized by TS, telling the compiler to look for the interface
+angular.d.ts. 
+
+web based components => it will have shadow dom
+angular inspired to use web based components and to convert angular components to web based components using angular elements
+
+tsconfig.json => contains info about compilation
+package.json => contains info about npm commands
+angular.json => contains angular cli configuration
+launch.json => used for debugging. click on vs code debug icon and click run ng serve. 
+it will launch app in debugger mode.
+commonmodule => most commonly used pipes and directives are declared in this module. thats y it is imported automatically by cli.
+ 
+ng serve => cli bundles all our ts files to js file and insert as script tag in html with the help of webpack.
+
+interpolation => {{}} => converts everything to string => evaluate every expression.
+The interpolation we had above to display the user’s name:
+<p>{{ user.name }}</p>
+is just sugar syntax for the following:
+<p [textContent]="user.name"></p>
+
+Angular will maintain the properties and attributes in sync.
+the value attribute will always contain 'hello', whereas the value property
+of the DOM node is dynamically modified by the browser, and thus contains whatever the user has entered in the text field.
+
+properties can have boolean values, whereas some attributes can only reflect it by being present or absent on the
+start tag. For example, you have the selected attribute on the <option> tag: no matter what value you give it, it will select the
+option, as long as it is present.
+
+property binding directly deals with the properties
+ access nested properties like style.color
+ [style.color]="expression" => evaluated on every change detection cycle
+
+eventbinding
+(click)="statement;statement" statement can be a function call. called when the event is emitted.
+
+<ng-template [ngIf]="races.length > 0">
+<div><h2>Races</h2></div>
+</ng-template>
+<div *ngIf="races.length > 0"><h2>Races</h2></div>
+* indicates structural directive
+
+<ul>
+<li *ngFor="let race of races; index as i">{{ i }} - {{ race.name }}</li>
+</ul>
+index is a exported variable in the directive
+other exported variables are even odd first last
+
+<p [style.color]="foreground">Friendship is Magic</p>
+<div [ngStyle]="{fontWeight: fontWeight, color: color}">I've got style</div>
+Note that the directive expects an object whose keys are the styles to set. The keys can either be in camelCase (fontWeight) or
+in dash-case ('font-weight').
+
+<div [class.awesome-div]="isAnAwesomeDiv()" [class.wonderfuldiv]="isAWonderfulDiv()">I've got style</div>
+<div [ngClass]="{'awesome-div': isAnAwesomeDiv(), 'wonderful-div':
+isAWonderfulDiv()}">I've got style</div>
+
+@input('htmlname') name
+@input()
+set name(value: string){
+
+}
+@Output() readonly ponySelected = new EventEmitter<PonyModel>();
+
+style encapsulation
+1)shadow dom
+<ns-pony>
+#shadow-root (open)
+<style>.red {color: red}</style>
+<div class="red">Rainbow Dash</div>
+</ns-pony>
+styles are included inside the shadow root itself.
+2)Emulated
+Angular takes component css and inline it inside head section
+while adding it rewrite the css selector name as well as it adds same attribute to all the nodes within the component
+<head>
+<style>.red[_ngcontent-dvb-3] {color: red}</style>
+</head>
+<body>
+...
+<ns-pony _ngcontent-dvb-2="" _nghost-dvb-3="">
+<div _ngcontent-dvb-3="" class="red">Rainbow Dash</div>
+</ns-pony>
+3) None => they inline into head style section but without rewriting(global styles)
+
+pipe
+pipe can be used in interpolation and binding expressions and not in event statements
+<div *ngFor="let pony of ponies | slice : 0 : 2 as total; index as i">
+{{ i + 1 }}/{{ total.length }}: {{ pony.name }}
+</div>
+
+keyvalue pipe automatically sorts based on number or string, if mixed it converts it to string and then it will sort
+<!-- entry contains { key: number, value: PonyModel } -->
+<li *ngFor="let entry of ponies | keyvalue">{{ entry.key }} - {{
+entry.value.name }}</li>
+
+number & percent pipe => {integerDigits}.{minFractionDigits}-{maxFractionDigits}
+in pipe input should be given in order as the pipe function expects
+{{ 10.6 | currency:'EUR':'symbol':'.2' }}
+
+pure pipe => default => it runs only when its input value or reference change => single instance
+@pipe({
+    name: '',
+    pure: true
+})
+
+Dependency injection => some part might require some other part 
+instead of creating that Dependency by ourself, we let framework create for use
+Inversion of control
+singleton pattern
+
+injection token along with provider
+export const BACKEND_URL_PROVIDED = new InjectionToken<string>('API URL', {
+providedIn: 'root',
+factory: () => 'http://localhost:8080'
+});
+
+guards and interceptors are functions in angular 14,15
+so inject() is used for di in those
+
+http
+it is optional and not included by default
+we need to add by provideHttpClient in config.ts
+observables returned are cancellable, retry , and composable
+the response returned is deserialized automatically by angular.
+while calling post also we dont need to searialize the payload, angular will do that for us.
+httpclient has an optional obj, we can modify the req and response there.
+
+httpContext => we can send a context along with the request. that context can be used in interceptors
+const context = new HttpContext().set(SHOULD_NOT_HANDLE_ERROR, true);
+return http.get(`${baseUrl}/api/users`, { context });
+
+export const errorHandlerInterceptor: HttpInterceptorFn = (
+req: HttpRequest<unknown>,
+next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+const router = inject(Router);
+const errorHandler = inject(ErrorHandler);
+// if there is a context specifically asking for not handling the error, we don't
+handle it
+if (req.context.get(SHOULD_NOT_HANDLE_ERROR)) {
+return next(req);
+}
+return next(req).pipe(
+
+interceptor (req,next)
+const reqn = req.clone()
+return next(reqn) to modify the request we should clone and modify
+next(req).pipe()=> to handle the response
+
+Router
+Router is also optional. Hence we need to provide in app.config
+provideRouter(routes)
+router-outlet => placeholder for the component corresponding to the current route
+routerLink & routerLinkActive
+router & ActivatedRoute => contains snapshot and parammap observable
+path matching strategy => default prefix so for '' every path will match that's y we give full
+Guards => canactivate, candeactivate, canactivatechild, canmatch
+canmatch => same path name different components, can match will decide which component to load.
+export const loggedInGuard: CanActivateFn = (
+_route: ActivatedRouteSnapshot,
+_state: RouterStateSnapshot
+): boolean | UrlTree => {
+const userService = inject(UserService);
+const router = inject(Router);
+
+RESOLVER => normally onclick of a button, router will change the url and corresponding component will 
+start loading, the api will be called and the data is shown, if error occurs in api, error will be handled in new page.
+But with resolver, all the api calls happen first before the router change the page, if the api calls succeeds, then it will
+navigate to the new page.
+{
+path: 'races/:raceId',
+component: RaceComponent,
+resolve: {
+race: raceResolver
+}
+export const raceResolver: ResolveFn<RaceModel> = (route: ActivatedRouteSnapshot):
+Observable<RaceModel> => {
+const id = route.paramMap.get('raceId')!;
+const raceService = inject(RaceService);
+return raceService.get(id);
+};
+
+Router events
+navigationStart => click on a link
+navigationEnd => successfully navigated to a new page
+navigationCancel => cancelled by guards
+navigationError => when resolvers emit empty or error observable
+
+matrix params => /races/42;foo=bar;baz=wiz/ponies
+specific to a route, it is accessible only form races/42 route segment
+router.navigate(['/races', 42, { foo: 'bar', baz: 'wiz' }, 'ponies']);
+
+query params => accessble throughout the route segments
+router.navigate(['/races', 42, 'ponies'], { queryParams: { foo: 'bar', baz: 'wiz' }
+});
+
+provideRouter(routes, withComponentInputBinding())
+since angular 16, component can declare input same as route param, then angular will automatically bid the value
+@Input({ required: true }) raceId!: string
+
+Lazy loading
+lazy loading all admin related routes
+declare all admin related routes in admin.route.ts file and declare
+{
+    path: 'admin', loadChildren: () => import('/admin/admin.route')
+}
+lazy load only one component then
+{
+    path: 'admin', loadComponent: () => import('/admin/admin.component')
+}
+
+FORMS
+input.ng-invalid.ng-dirty {
+border: 3px red solid;
+}
+angular will add ng-invalid etc classes based on the state of the form automatically
+ng-pending is dynamically added to the field while the asynchronous validator
+forms are typed from angular 14
+custom control => implement controlvalueaccessor
+writevalue
+registerOnchange
+registerOntouched
+setdisabledstate
+providers: [
+{
+provide: NG_VALUE_ACCESSOR,
+useExisting: forwardRef(() => RatingComponent),
+multi: true
+}
+]
+view child query will have upto date value all the time
+static: true makes view child works inside ngoninit but it is not intended to
+viewchildren returns querylist it has many methods, first last length changes map filter toArray
+
+content projection
+<ng-content select=".title"></ng-content>
+</h4>
+<p class="card-text">
+<ng-content select=".content"></ng-content>
+
+<ns-card>
+<p class="title">Card <strong>title</strong></p>
+<p class="content">Some quick <strong>example</strong> text</p>
+</ns-card>
+it lacks the ability to add context(dynamic values) in the projected content
+for that we can use templateref => which can have dynamic values of the current component
+
+<ng-template #myFormatter let-p="percentage"><strong>Your</strong> progress: {{ p |
+number }}%</ng-template>
+through let-p it can have dynamic values from the new component as well
+Angular defines a micro-syntax for structural
+directives
+<ng-template ngFor [ngForOf]="ponies" let-pony let-i="index">
+<div>{{ i }} - {{ pony }}</div>
+</ng-template>
+ *ngFor="let pony of ponies; i as index">
+
+ hostlistener
+ @HostListener('dblclick',['$event'])//we can access the event as well
+clearContent(): void {
+this.element.nativeElement.value = '';
+}
+@HostBinding('value') innerValue;
+everytime the innervalue changes, it updates the host value property
+
+@HostBinding('class.is-required')
+get isRequired(): boolean {
+return this.control.hasError('required');
+}
+everytime the directive is used in the form this get method will run
+in directive constructor we can access elementref ngControl and other instances used in the host element
+
+Modules
+when standalone and modules are used together, standalone components should be considered as separate module
+they need to be in the imports of the module
+single component angular modules(SCAMs) which leads to standalone components
+
+Performances
+first load, reload, runtime Performance
+first load => assets, bundling, treeshaking, minified and dead code elimination(Terser), assets are compressed and gzipped, lazy loading, subscribe
+reload => caching => configured on the server cachecontrol and etag headers
+hash code will be attached to the bundled file names. cache busting
+runtime => trackby, onpush
+
+ChangeDetectorRef
+detach()
+detectChanges()
+markForCheck()
+reattach()
+start(): void {
+this.ref.detach();
+this.interval$.subscribe(time => {
+    this.time = time;
+// manually trigger the change detection every second
+if (this.time % 1000 === 0) {
+this.ref.detectChanges();
+}
+});
+
+this.zone.runOutsideAngular(() => {
+this.chart = new Chart(ctx, {
+type: 'bar',
+data: {
+labels: ['Green', 'Red'],
+datasets: [{ label: 'Score', data: [12, 21] }]
+}
+});
+});
+
+pure pipes => will execute only when input ref to the transform function changes.
+@input => will be checked everytime for change
+@Attribute => its like one time thing and angular does not check for changes.
+
+SIGNALS => different way for handling reactivity (synchronous)
+const total = computed(() => count() * untracked(() => multiplier()));
+if we want to exclude a signal from computing total computed signal we can use untracked function
+const a =signal().asReadOnly() makes it readonly signal
+signal has set, update, mutate methods
+
+const effectRef: EffectRef = effect(() => console.log(this.count()));
+// stop executing the effect
+effectRef.destroy();
+
+effect(
+() => {
+if (this.count() > 10) {
+this.count.set(0);
+}
+},
+{ allowSignalWrites: true }
+);
+without allow signalwrites it creates an infinite loop
+
+const user = signal(
+{
+id: 1,
+name: 'Cédric'
+},
+{ equal: (previousUser, newUser) => previousUser.id === newUser.id }
+);
+// upperCaseName will not re-evaluate when the user changes if the ID stays the
+same
+const uppercaseName = computed(() => user().name.toUpperCase());
+pass ValueEqualityFn to the signal function, Object.is() is default to check whether signal changes or Not
+inorder to run effect or computed.
+
+in onpush change detection components in addition to 
+input change, async pipe, browser events in the component, signal change is also included
+
+rxjs and signal can be converted to one another
+@angular/core/rxjs-interop
+
+configuration
+budget, outputhashing, file replacements,sourcemap

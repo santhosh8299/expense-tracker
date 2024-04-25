@@ -16,5 +16,17 @@ export interface monthlyExpenseI {
     expenselist: weeklyExpenseI[]
 }
 export interface expenseCategoryI {
-    name: string
+    name: string;
+    id: string
+}
+export interface expenseCategorywithListI extends expenseCategoryI{
+    items: expenseItemsI[]
+}
+export interface expenseItemsI{
+    categoryId: string;
+    name: string;
+    price: number;
+    quantity: number;
+    shop: string;
+    id: string
 }

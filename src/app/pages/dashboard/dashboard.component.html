@@ -1,0 +1,10 @@
+<p-tabView>
+    <p-tabPanel header="Overview">
+        <ds-overview></ds-overview>
+    </p-tabPanel>
+    <p-tabPanel header="Expense Category">
+        @if(expenseApis$ | async; as categories) {
+            <ds-expense-category [categories]="categories"></ds-expense-category>
+        }
+    </p-tabPanel>
+</p-tabView>
