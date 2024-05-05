@@ -1,0 +1,70 @@
+syntax parsers => read your js code character by character and check for any grammar errors
+lexical environment => where something sits physically in the code you write
+execution contexts => the one which is currently running is execution contexts
+It can contain things beyond what you have written in the code.
+
+name value pair => let a = 5; a => name; 5 => value;
+every name has only one value in an execution contexts
+Object => collection of name value pair
+in browser, we have global execution context which provides this and global object window
+
+execution context => 
+creation Phase => we have global object, this which are setup in memory, variable environment and outer environment(lexical)
+when the parser going through the code written it sets up memory space for variables and functions
+this process is hoisting. and then only it will start executing.
+for functions, it is entirely placed to memory while parsing
+for variables => it allocates space and place undefined as value.
+the variables will get value only at the time of execution
+execution phase => it executes line by line
+
+undefined => is a special keyword, special value
+var a; => a will get a memory space and undefined as value
+
+function invocation=> calling function using () => create new execution context
+execution stack =>whenever new execution context created it creates a stack
+
+scope => where a variable is available in your code
+let, const => doesn't allow the variable to be used before it is declared.
+
+closures => 
+function greet(sayHi){
+    return function(name){
+        return name + '' + sayHi
+    }
+}
+let a = greet('welcome'); //greet execution context will be stacked which has sayHi as its environmental variable
+//after executing greet will be stacked out but the sayHi variable still lives.
+a('santhosh'); // the inner function still have access to that variable
+this is called closure
+
+function build(){
+    var a = []
+    for(var i=0; i<3; i++){
+        a.push(function(){
+            console.log(i)
+        })
+    }
+    return a
+}
+c = build();
+c[0]();
+c[1]();
+c[2]();
+
+function build(){
+    var a = []
+    for(var i=0; i<3; i++){
+        (function(j){
+            a.push(function(){
+                console.log(j)
+            })
+        })(i)
+    }
+    return a
+}
+c = build();
+c[0]();
+c[1]();
+c[2]();
+
+

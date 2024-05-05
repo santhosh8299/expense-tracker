@@ -1,0 +1,3 @@
+nodejs => js runtime like browser
+node also has v8 engine like chrome, which converts js to machine code
+node has some extra modules than browser like filesystem, os, http

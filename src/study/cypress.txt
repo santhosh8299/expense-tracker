@@ -1,0 +1,74 @@
+cypress file should end with cy.ts extension in order for cypress to find it for testing
+describe('',()=>{})=> test suite(collection of tests that are related)
+tests => run totally isolated, they are independent of each other
+cy =>cypress object that is made available globally
+cypress wait for each and every command for 4 seconds => timeout seconds.
+it can be changed in cypress.config.ts file(global)
+some config can be done locally in describe('',{},()=>{}), the second parameter takes in config object
+eg: {time}, {browser: 'firefox'}
+beforeEach(()=>{}) runs before every tests
+before(()=>{}) runs only once before all tests
+after, afterEach
+
+visit => will takes us to the page mentioned and fails if no such page exists.
+/// <reference types="Cypress" /> => add this to the top of the page to get the vs code autocompletion
+get => to find all the elements on the page that match the selector. if we chain get, the second get wil look the whole page instead of first get alone.
+//if the get doesn't find any element the test will fail.
+find => get('').find('') => find all element that match inside get element // find can't be used standalone, it should be chained with get
+contains => look for certain text inside the element // it will search for whole page if no get is chained.
+// contains will also yeild the element that contain the text // will also search for partial text match
+expectations => explicit and implicit
+explicit => should => cy.get('h1').should('have.length',1), 'have.attr',disabled
+.get() //.first(),.last(),.eq(1) selects the element with the index,.parent,.children
+should('not.exist'), exist
+.should('have.attr','class').should('equal','invalid') // first should returns the class attribute value and second should checks that value
+// not all should returns class attribute value only some
+.should((el)=>{// also takes a function like then
+    expect(el.attr('class')).not.to.be.undefined;
+})
+chaining multiple should is the preferred way
+
+user interaction => select the element and then call click() // click will click in the center of the element selected
+click({force: true}) it will click on the selected element even if some element sits on top of this element.
+.type('some text') for simulating type. apart from typing it can also simulate key process
+.type('some text{enter}') => will type some text and enter will be pressed
+.select('value') for selecting option in the dropdown. we can pass both label or value as a parameter.
+.focus().blur() => it focusses the element and then it blurs it
+
+data-cy='header-about-link' => add this in the html, this is the official way of selecting elements in cypress
+cy.location('pathname').should('eq','/about') => gives the current url path, 
+cy.go('back') //back or forward, it uses the browser back or forward button for navigation.
+cy.screenshot() => takes screenshot
+
+alias => cy.get('[data-cy="header-about-link"]').as('aboutLink')
+alias usage => cy.get('@aboutLink')
+
+then => get usually returns the cypress chainable but if u want access to the wrapper obj which inturn gives u access the underlying element use then
+cy.get('[data-cy="header-about-link"]').then((el)=>{})//el => ref to the wrapper obj
+inside this function should wont work so use expect(el.text()).to.be('send message')
+
+npx cypress open => will open cypress studio in chrome and run all the tests.
+npx cypress run => will run without opening cypress studio and runs in terminal only(headless).
+
+custom command & custom Queries => written in cypress > support > commands.ts file
+Cypress.Commands.add('submitForm',()=>{
+    cy.get('form button[type="submit"]').click()
+})
+cy.submitForm()
+
+custom query
+Cypress.Commands.addQuery('getById',(id)=>{//it is retryable query by cypress hence it returns a function which will be ran for 4 secs
+    const getFn = cy.now('get',`[data-cy="${id}"]`)
+    return ()=>{
+        const element = getFn();
+        return element
+    }
+})
+cypress used to chain commands  before executing, but we need immediate element so we used cy.now
+
+cy.task('sometask')// to run some tasks outside browser environment
+setupNodeEvents(on, config){// in needs to be registered in global config file cypress.config.ts
+    on('task', {
+        sometask(){}
+    })
+}

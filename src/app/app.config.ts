@@ -1,4 +1,4 @@
-import { ApplicationConfig, InjectionToken } from '@angular/core';
+import { ApplicationConfig, InjectionToken, importProvidersFrom, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import {
@@ -12,6 +12,10 @@ import { environment } from '../environments/environment';
 
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideStore } from '@ngrx/store';
+import { expenseReducer } from './state/expenses/expense.reducer';
+import { provideEffects } from '@ngrx/effects';
+import { ExpenseEffects } from './state/expenses/expense.effects';
 
 const app = initializeApp(environment.firebase);
 
@@ -43,5 +47,5 @@ export const FIRESTORE = new InjectionToken('Firebase firestore', {
 });
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideAnimations()],
+  providers: [provideRouter(routes), provideAnimations(), provideStore({expense: expenseReducer}), provideEffects([ExpenseEffects])],
 };

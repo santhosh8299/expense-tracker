@@ -1,4 +1,4 @@
-<p-table [value]="expenseList()" dataKey="id" #dt editMode="row" [tableStyle]="{'min-width': '50rem'}">
+<p-table [value]="expenses()" dataKey="id" #dt editMode="row" [tableStyle]="{'min-width': '50rem'}">
     <ng-template pTemplate="caption">
         <button dataid="add-expense-button" (click)="addExpense()">Add Expense</button>
     </ng-template>

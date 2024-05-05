@@ -1,0 +1,2 @@
+ng add @ngrx/schematics@latest => inorder to use the ng generate store,action,selector commands
+ng config cli.defaultCollection @ngrx/schematics

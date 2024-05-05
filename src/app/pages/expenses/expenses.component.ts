@@ -11,6 +11,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api'
 import { MessagesModule } from 'primeng/messages';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { ExpenseActions } from '../../state/expenses/expense.actions';
+import { Store } from '@ngrx/store';
+import { selectExpense } from '../../state/expenses/expense.selectors';
 
 interface expenseState{
     expenseList: expenseI[],
@@ -28,14 +31,16 @@ export default class ExpensesComponent {
     expenseService = inject(ExpenseService);
     utilityService = inject(UtilityService);
     messageService = inject(MessageService)
+    store = inject(Store)
+    expenses = this.store.selectSignal(selectExpense)
     //state
-    state = signal<expenseState>({
+    /* state = signal<expenseState>({
         expenseList: [],
-    })
+    }) */
     clonedEditedExpense?: expenseI;
     suggestedExpenses: expenseItemsI[] = [];
     //selectors
-    expenseList = computed(() => this.state().expenseList);
+    //expenseList = computed(() => this.state().expenseList);
 
 
     expenseCategories = signal<expenseCategoryI[]>([]);
@@ -43,18 +48,19 @@ export default class ExpensesComponent {
     getExpenseList$ = this.expenseService.getExpenseList();
 
     constructor(){
-        this.getExpenseList();
+        this.store.dispatch(ExpenseActions.loadExpense());
+        //this.getExpenseList();
         this.getExpenseCategories$.subscribe(data => {
             this.expenseCategories.set(data)
         })
     }
-    getExpenseList(){
+    /* getExpenseList(){
         this.getExpenseList$.subscribe(list => {
             this.state.update(state =>  {
                 return {...state, expenseList: list}
             });
         })
-    }
+    } */
     onRowEditInit(expense: expenseI) {
         this.clonedEditedExpense = {...expense};
     }
@@ -76,15 +82,15 @@ export default class ExpensesComponent {
     }
 
     onRowEditCancel(expense: expenseI, index: number) {
-        this.state.update(state => {
+        /* this.state.update(state => {
             state.expenseList[index] = this.clonedEditedExpense!;
             return state
-        })
+        }) */
         delete this.clonedEditedExpense;
     }
     addExpense(){
         if(this.expenseTable()){
-            if(!this.clonedEditedExpense){
+            //if(!this.clonedEditedExpense){
                 const rowData = {
                     id: '',
                     name: '',
@@ -93,11 +99,13 @@ export default class ExpensesComponent {
                     quantity: 0,
                     price: 0,
                 }
-                this.state.update(state => {
+                /* this.state.update(state => {
                     return {...state,expenseList: [...state.expenseList,rowData]}
-                })
+                }) */
+                //this.store.dispatch(ExpenseActions.addExpense(rowData))
                 this.expenseTable()?.initRowEdit(rowData);
-            }
+
+            //}
         }
     }
     onRowDelete(expense: expenseI){
@@ -112,11 +120,11 @@ export default class ExpensesComponent {
     }
     selectLibExpense(event: AutoCompleteSelectEvent, index: number){
         console.log(event)
-        this.state.update(state => {
+        /* this.state.update(state => {
             state.expenseList[index] = event.value;
             return state
         })
-        this.expenseTable()?.initRowEdit(this.state().expenseList[index]);
+        this.expenseTable()?.initRowEdit(this.state().expenseList[index]); */
     }
     getCategoryName(expense: expenseItemsI){
         return this.expenseCategories().find(cat => cat.id === expense.categoryId)?.name

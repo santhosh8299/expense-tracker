@@ -1,3 +1,4 @@
+/// <reference types="Cypress" />
 describe('add expense',()=>{
     const expense = {
         id: '',
@@ -7,7 +8,6 @@ describe('add expense',()=>{
         quantity: 1,
         price: 1,
     }
-    
     function startBackend(): void {
         cy.intercept({
             method: 'POST', 

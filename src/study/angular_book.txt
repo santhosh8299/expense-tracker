@@ -370,3 +370,60 @@ rxjs and signal can be converted to one another
 
 configuration
 budget, outputhashing, file replacements,sourcemap
+
+standalone vs ngmodule
+ngmodule => provides context for compilers. which acts as an another layer of modularity other than ecma modules
+standalone => each standalone component acts as a ngmodule. it contains all its imports within it.
+this introduces a concept of barrel(index.ts , public_api.ts). where all related imports are imported and exported.
+nx helps with libraries to achieve the same functionality
+importProvidersFrom => to import services from existing ngmodules
+provideRouters, provideAnimation etc are declared as function since it is easily tree shakable.
+loadChildren can now point to lazy loaded routes instead of modules
+lazy loaded routes have an option to provide providers now
+path: '',
+5 component: FlightBookingComponent,
+6 providers: [
+7 provideBookingDomain(config)
+8 ],
+9 children: [
+10 {
+11 path: '',
+12 pathMatch: 'full',
+13 redirectTo: 'flight-search'
+14 },
+
+Here service is provided to the grouped emptypath  so it will be available to all its children, this 
+technique has been used for guards.
+this injector is called environment injector
+this introduces new concept of injection scope, where new injection scope is created with help of providers array while defining routes
+by default, providedin root services will be loaded with their lazy loaded parts(not work incase of providing config)
+
+similar to app initializer
+roviders: [
+5 importProvidersFrom(StoreModule.forFeature(bookingFeature)),
+6 importProvidersFrom(EffectsModule.forFeature([BookingEffects])),
+7 {
+8 provide: ENVIRONMENT_INITIALIZER,
+9 multi: true,
+10 useValue: () => inject(InitService).init()
+11 }
+12 ],
+
+ENVIRONMENT_INITIALIZER for each lazy loaded environment
+
+provideRouter(
+2 APP_ROUTES,
+3 withComponentInputBinding()
+4 ),
+this.router.lastSuccessfulNavigation => contains info about current route
+
+Providers: [
+7 provideHttpClient(
+8 withInterceptors([authInterceptor]),
+9 ),
+10 ]
+The combination of a provideXYZ function and several optional withXYZ functions
+
+If there are interceptors in the current environment injector, Angular ignores the interceptors in
+outer scopes.
+

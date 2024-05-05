@@ -27,7 +27,8 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss",
@@ -99,7 +100,8 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss"
@@ -125,20 +127,6 @@
             "headless": false
           }
         },
-        "ct": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "expense-tracker:serve",
-            "watch": true,
-            "headless": false,
-            "testingType": "component"
-          },
-          "configurations": {
-            "development": {
-              "devServerTarget": "expense-tracker:serve:development"
-            }
-          }
-        },
         "e2e": {
           "builder": "@cypress/schematic:cypress",
           "options": {
@@ -157,8 +145,9 @@
   },
   "cli": {
     "schematicCollections": [
+      "@schematics/angular",
       "@cypress/schematic",
-      "@schematics/angular"
+      "@ngrx/schematics"
     ]
   }
 }
